@@ -33,7 +33,7 @@
             width: 100%;
         }
         </style>
-        <title>Ovládanie priehľadnosti</title>
+        <title>Prepínanie vrstiev</title>
     </head>
     <body>
         <div id="map"></div>
@@ -48,14 +48,14 @@
             // Inicializácia mapy
             var map = L.map('map', {
                 zoomControl: true,
-                maxZoom: 28,
-                minZoom: 1
-            }).fitBounds([[48.1878709054882, 17.748193907221605], [48.41519479872592, 18.545767246247838]]);
+                maxZoom: 18,
+                minZoom: 10
+            }).setView([48.3129, 18.0873], 13); // Nastavte mierne zúžené centrum a zoom
 
             // Základná mapa: OpenStreetMap
             L.tileLayer('https://api.maptiler.com/maps/backdrop/{z}/{x}/{y}.png?key=pusNgxj730b7uvx56NUd', {
                 maxZoom: 19,
-                attribution: '© MapTiler contributors'
+                attribution: '© OpenStreetMap contributors'
             }).addTo(map);
 
             // Vrstva 1: Runoff Ratio
@@ -68,6 +68,9 @@
             var boundsRetentionVolume = [[48.203797543670156, 17.98060332596714], [48.39435883836944, 18.189952314693]];
             var retentionLayer = L.imageOverlay(imgRetentionVolume, boundsRetentionVolume, { opacity: 0.7 });
 
+            // Pridať iba Runoff Ratio na začiatku
+            runoffLayer.addTo(map);
+
             // Pridanie vrstiev do ovládania
             var overlayLayers = {
                 "Runoff Ratio": runoffLayer,
@@ -75,10 +78,6 @@
             };
 
             L.control.layers(null, overlayLayers).addTo(map);
-
-            // Nastavenie vrstiev ako viditeľné predvolene
-            runoffLayer.addTo(map);
-            retentionLayer.addTo(map);
 
             // Slider na ovládanie priehľadnosti vrstvy Runoff Ratio
             document.getElementById('runoff-opacity').addEventListener('input', function (e) {
