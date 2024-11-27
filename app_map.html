@@ -68,16 +68,16 @@
             var boundsRetentionVolume = [[48.203797543670156, 17.98060332596714], [48.39435883836944, 18.189952314693]];
             var retentionLayer = L.imageOverlay(imgRetentionVolume, boundsRetentionVolume, { opacity: 0.7 });
 
-            // Pridať iba Runoff Ratio na začiatku
-            runoffLayer.addTo(map);
-
-            // Pridanie ovládania vrstiev
+            // Pridanie vrstiev do ovládania
             var overlayLayers = {
                 "Runoff Ratio": runoffLayer,
                 "Retention Volume": retentionLayer
             };
 
             L.control.layers(null, overlayLayers).addTo(map);
+
+            // Predvolená viditeľnosť vrstvy
+            runoffLayer.addTo(map); // Runoff Ratio je predvolene zapnutá
 
             // Slider na ovládanie priehľadnosti vrstvy Runoff Ratio
             document.getElementById('runoff-opacity').addEventListener('input', function (e) {
