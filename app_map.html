@@ -1,52 +1,82 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Interaktívna mapa s prepínaním</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-ajax/2.1.0/leaflet.ajax.min.js"></script>
-    <style>
-        #map { height: 100vh; }
-    </style>
-</head>
-<body>
-    <div id="map"></div>
-    <script>
-        // Inicializácia mapy
-        var map = L.map('map').setView([48.3129, 18.0873], 13); // Nitra
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        .opacity-controls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+        .opacity-controls label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        .opacity-controls input {
+            width: 100%;
+        }
+        </style>
+        <title>Ovládanie priehľadnosti</title>
+    </head>
+    <body>
+        <div id="map"></div>
+        <div class="opacity-controls">
+            <label>Runoff Ratio:</label>
+            <input id="runoff-opacity" type="range" min="0" max="1" step="0.1" value="1">
+            <label>Retention Volume:</label>
+            <input id="retention-opacity" type="range" min="0" max="1" step="0.1" value="1">
+        </div>
+        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+        <script>
+            // Inicializácia mapy
+            var map = L.map('map', {
+                zoomControl: true,
+                maxZoom: 28,
+                minZoom: 1
+            }).fitBounds([[48.1878709054882, 17.748193907221605], [48.41519479872592, 18.545767246247838]]);
 
-        // Základná vrstva
-        var baseLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '© OpenStreetMap contributors'
-        }).addTo(map);
+            // Základná mapa: OpenStreetMap
+            L.tileLayer('https://api.maptiler.com/maps/backdrop/{z}/{x}/{y}.png?key=pusNgxj730b7uvx56NUd', {
+                maxZoom: 19,
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
 
-        // GeoJSON vrstvy pre jednotlivé mapy
-        var map1 = new L.GeoJSON.AJAX("data/map1.geojson", {
-            onEachFeature: function (feature, layer) {
-                layer.bindPopup(feature.properties.name || "Neznáme miesto");
-            }
-        });
+            // Vrstva 1: Runoff Ratio
+            var imgRunoffRatio = 'data/runoff_ratio_1.png';
+            var boundsRunoffRatio = [[48.203797543670156, 17.98060332596714], [48.39435883836944, 18.189952314693]];
+            var runoffLayer = L.imageOverlay(imgRunoffRatio, boundsRunoffRatio, { opacity: 1 }).addTo(map);
 
-        var map2 = new L.GeoJSON.AJAX("data/map2.geojson", {
-            onEachFeature: function (feature, layer) {
-                layer.bindPopup(feature.properties.name || "Neznáme miesto");
-            }
-        });
+            // Vrstva 2: Retention Volume
+            var imgRetentionVolume = 'data/retention_volume_no_inf_2.png';
+            var boundsRetentionVolume = [[48.203797543670156, 17.98060332596714], [48.39435883836944, 18.189952314693]];
+            var retentionLayer = L.imageOverlay(imgRetentionVolume, boundsRetentionVolume, { opacity: 1 }).addTo(map);
 
-        // Vrstva na prepínanie
-        var overlayMaps = {
-            "Mapa 1": map1,
-            "Mapa 2": map2
-        };
+            // Slider na ovládanie priehľadnosti vrstvy Runoff Ratio
+            document.getElementById('runoff-opacity').addEventListener('input', function (e) {
+                runoffLayer.setOpacity(e.target.value);
+            });
 
-        // Pridať kontrolu vrstiev
-        L.control.layers(null, overlayMaps).addTo(map);
-
-        // Aktivovať prvú mapu ako predvolenú
-        map1.addTo(map);
-    </script>
-</body>
+            // Slider na ovládanie priehľadnosti vrstvy Retention Volume
+            document.getElementById('retention-opacity').addEventListener('input', function (e) {
+                retentionLayer.setOpacity(e.target.value);
+            });
+        </script>
+    </body>
 </html>
