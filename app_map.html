@@ -50,7 +50,7 @@
                 zoomControl: true,
                 maxZoom: 18,
                 minZoom: 10
-            }).setView([48.3129, 18.0873], 13); // Nastavte mierne zúžené centrum a zoom
+            }).setView([48.3129, 18.0873], 13);
 
             // Základná mapa: OpenStreetMap
             L.tileLayer('https://api.maptiler.com/maps/backdrop/{z}/{x}/{y}.png?key=pusNgxj730b7uvx56NUd', {
@@ -71,7 +71,7 @@
             // Pridať iba Runoff Ratio na začiatku
             runoffLayer.addTo(map);
 
-            // Pridanie vrstiev do ovládania
+            // Pridanie ovládania vrstiev
             var overlayLayers = {
                 "Runoff Ratio": runoffLayer,
                 "Retention Volume": retentionLayer
