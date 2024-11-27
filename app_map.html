@@ -14,35 +14,11 @@
             padding: 0;
             margin: 0;
         }
-        .opacity-controls {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: white;
-            padding: 10px;
-            border-radius: 5px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-        }
-        .opacity-controls label {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 14px;
-        }
-        .opacity-controls input {
-            width: 100%;
-        }
         </style>
         <title>Prepínanie vrstiev</title>
     </head>
     <body>
         <div id="map"></div>
-        <div class="opacity-controls">
-            <label>Runoff Ratio:</label>
-            <input id="runoff-opacity" type="range" min="0" max="1" step="0.1" value="0.7">
-            <label>Retention Volume:</label>
-            <input id="retention-opacity" type="range" min="0" max="1" step="0.1" value="0.7">
-        </div>
         <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
         <script>
             // Inicializácia mapy
@@ -53,7 +29,7 @@
             }).setView([48.3129, 18.0873], 13);
 
             // Základná mapa: OpenStreetMap
-            L.tileLayer('https://api.maptiler.com/maps/backdrop/{z}/{x}/{y}.png?key=pusNgxj730b7uvx56NUd', {
+            var baseLayer = L.tileLayer('https://api.maptiler.com/maps/backdrop/{z}/{x}/{y}.png?key=pusNgxj730b7uvx56NUd', {
                 maxZoom: 19,
                 attribution: '© OpenStreetMap contributors'
             }).addTo(map);
@@ -68,25 +44,27 @@
             var boundsRetentionVolume = [[48.203797543670156, 17.98060332596714], [48.39435883836944, 18.189952314693]];
             var retentionLayer = L.imageOverlay(imgRetentionVolume, boundsRetentionVolume, { opacity: 0.7 });
 
+            // Pridať iba Runoff Ratio na začiatku
+            runoffLayer.addTo(map);
+
             // Pridanie vrstiev do ovládania
             var overlayLayers = {
                 "Runoff Ratio": runoffLayer,
                 "Retention Volume": retentionLayer
             };
 
+            // Pridanie ovládania vrstiev
             L.control.layers(null, overlayLayers).addTo(map);
 
-            // Predvolená viditeľnosť vrstvy
-            runoffLayer.addTo(map); // Runoff Ratio je predvolene zapnutá
-
-            // Slider na ovládanie priehľadnosti vrstvy Runoff Ratio
-            document.getElementById('runoff-opacity').addEventListener('input', function (e) {
-                runoffLayer.setOpacity(e.target.value);
+            // Eventy pre ladenie viditeľnosti vrstiev
+            map.on('overlayadd', function (event) {
+                console.log("Vrstva zapnutá:", event.layer);
+                event.layer.addTo(map);
             });
 
-            // Slider na ovládanie priehľadnosti vrstvy Retention Volume
-            document.getElementById('retention-opacity').addEventListener('input', function (e) {
-                retentionLayer.setOpacity(e.target.value);
+            map.on('overlayremove', function (event) {
+                console.log("Vrstva vypnutá:", event.layer);
+                map.removeLayer(event.layer);
             });
         </script>
     </body>
