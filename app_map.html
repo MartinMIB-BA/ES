@@ -39,9 +39,9 @@
         <div id="map"></div>
         <div class="opacity-controls">
             <label>Runoff Ratio:</label>
-            <input id="runoff-opacity" type="range" min="0" max="1" step="0.1" value="1">
+            <input id="runoff-opacity" type="range" min="0" max="1" step="0.1" value="0.7">
             <label>Retention Volume:</label>
-            <input id="retention-opacity" type="range" min="0" max="1" step="0.1" value="1">
+            <input id="retention-opacity" type="range" min="0" max="1" step="0.1" value="0.7">
         </div>
         <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
         <script>
@@ -61,12 +61,24 @@
             // Vrstva 1: Runoff Ratio
             var imgRunoffRatio = 'data/runoff_ratio_1.png';
             var boundsRunoffRatio = [[48.203797543670156, 17.98060332596714], [48.39435883836944, 18.189952314693]];
-            var runoffLayer = L.imageOverlay(imgRunoffRatio, boundsRunoffRatio, { opacity: 1 }).addTo(map);
+            var runoffLayer = L.imageOverlay(imgRunoffRatio, boundsRunoffRatio, { opacity: 0.7 });
 
             // Vrstva 2: Retention Volume
             var imgRetentionVolume = 'data/retention_volume_no_inf_2.png';
             var boundsRetentionVolume = [[48.203797543670156, 17.98060332596714], [48.39435883836944, 18.189952314693]];
-            var retentionLayer = L.imageOverlay(imgRetentionVolume, boundsRetentionVolume, { opacity: 1 }).addTo(map);
+            var retentionLayer = L.imageOverlay(imgRetentionVolume, boundsRetentionVolume, { opacity: 0.7 });
+
+            // Pridanie vrstiev do ovládania
+            var overlayLayers = {
+                "Runoff Ratio": runoffLayer,
+                "Retention Volume": retentionLayer
+            };
+
+            L.control.layers(null, overlayLayers).addTo(map);
+
+            // Nastavenie vrstiev ako viditeľné predvolene
+            runoffLayer.addTo(map);
+            retentionLayer.addTo(map);
 
             // Slider na ovládanie priehľadnosti vrstvy Runoff Ratio
             document.getElementById('runoff-opacity').addEventListener('input', function (e) {
