@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Interaktívna mapa s prepínaním</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-ajax/2.1.0/leaflet.ajax.min.js"></script>
+    <style>
+        #map { height: 100vh; }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <script>
+        // Inicializácia mapy
+        var map = L.map('map').setView([48.1486, 17.1077], 13); // Bratislava
+
+        // Základná vrstva
+        var baseLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // GeoJSON vrstvy pre jednotlivé mapy
+        var map1 = new L.GeoJSON.AJAX("data/map1.geojson", {
+            onEachFeature: function (feature, layer) {
+                layer.bindPopup(feature.properties.name || "Neznáme miesto");
+            }
+        });
+
+        var map2 = new L.GeoJSON.AJAX("data/map2.geojson", {
+            onEachFeature: function (feature, layer) {
+                layer.bindPopup(feature.properties.name || "Neznáme miesto");
+            }
+        });
+
+        // Vrstva na prepínanie
+        var overlayMaps = {
+            "Mapa 1": map1,
+            "Mapa 2": map2
+        };
+
+        // Pridať kontrolu vrstiev
+        L.control.layers(null, overlayMaps).addTo(map);
+
+        // Aktivovať prvú mapu ako predvolenú
+        map1.addTo(map);
+    </script>
+</body>
+</html>
