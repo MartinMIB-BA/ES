@@ -4,198 +4,100 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
-        <meta name="mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-capable" content="yes">
         <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
         <style>
-        html, body, #map {
-            width: 100%;
-            height: 100%;
-            padding: 0;
-            margin: 0;
-        }
-        .legend {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            background: white;
-            padding: 10px;
-            border-radius: 5px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-            font-size: 12px;
-            z-index: 1000;
-            display: none;
-        }
-        .legend h4 {
-            margin: 0 0 10px;
-            font-size: 14px;
-        }
-        .legend p {
-            margin: 0;
-            line-height: 1.5;
-        }
-        .legend span {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            margin-right: 5px;
-            border: 1px solid black;
-        }
+            html, body, #map {
+                width: 100%;
+                height: 100%;
+                padding: 0;
+                margin: 0;
+            }
+            .legend {
+                position: absolute;
+                bottom: 20px;
+                left: 20px;
+                background: white;
+                padding: 10px;
+                border-radius: 5px;
+                box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+                font-size: 12px;
+                z-index: 1000;
+                display: none;
+            }
+            .legend h4 {
+                margin: 0 0 10px;
+                font-size: 14px;
+            }
+            .legend p {
+                margin: 0;
+                line-height: 1.5;
+            }
+            .legend span {
+                display: inline-block;
+                width: 12px;
+                height: 12px;
+                margin-right: 5px;
+                border: 1px solid black;
+            }
         </style>
-        <title>Podkladová vrstva Blank</title>
+        <title>Interactive Map with Thematic Layers</title>
     </head>
     <body>
         <div id="map"></div>
+        <!-- Legends -->
+        <!-- Include all legend divs here -->
         <div id="runoff-legend" class="legend">
-            <h4>Runoff Ratio - index 0 - 1</h4>
-            <p><span style="background: #2b83ba;"></span> 0</p>
-            <p><span style="background: #abdda4;"></span> 0,25</p>
-            <p><span style="background: #ffffbf;"></span> 0,5</p>
-            <p><span style="background: #fdae61;"></span> 0,75</p>
-            <p><span style="background: #d7191c;"></span> 1</p>
+            <!-- Legend content -->
         </div>
-        <div id="retention-legend" class="legend">
-            <h4>Retention Volume - m3/100m2</h4>
-            <p><span style="background: #f7fbff;"></span> 0</p>
-            <p><span style="background: #c8dcf0;"></span> 19</p>
-            <p><span style="background: #73b2d8;"></span> 38</p>
-            <p><span style="background: #2979b9;"></span> 57</p>
-            <p><span style="background: #08306b;"></span> 76</p>
+        <!-- Other legends -->
+        <div id="reclass-legend" class="legend">
+            <!-- Reclass legend content -->
         </div>
-        <div id="cooling-legend" class="legend">
-            <h4>Urban Cooling - index</h4>
-            <p><span style="background: #e75a3b;"></span> 0,1</p>
-            <p><span style="background: #f89b5a;"></span> 0,2</p>
-            <p><span style="background: #fbc57e;"></span> 0,3</p>
-            <p><span style="background: #fae6a4;"></span> 0,4</p>
-			<p><span style="background: #e7f0b4;"></span> 0,5</p>
-            <p><span style="background: #c2e2ad;"></span> 0,6</p>
-            <p><span style="background: #99ceaa;"></span> 0,7</p>
-            <p><span style="background: #62a9b2;"></span> 0,8</p>
-			<p><span style="background: #2b83ba;"></span> 0,9</p>
-        </div>
-	<div id="reclass-legend" class="legend">
-    		<h4>2023 Reclass - Land Use Types</h4>
-    		<p><span style="background: #339900;"></span> Lesy a lesíky</p>
-    		<p><span style="background: #00ffcc;"></span> Prieseky, polomy, lesné cesty</p>
-    		<p><span style="background: #33ff33;"></span> Mimolesná vegetácia</p>
-    		<p><span style="background: #ffff99;"></span> TTP</p>
-    		<p><span style="background: #ffff00;"></span> Dočasné úhory</p>
-    		<p><span style="background: #cc6600;"></span> Veľkoplošné polia</p>
-    		<p><span style="background: #cc9900;"></span> Maloplošné polia a mozaiky</p>
-    		<p><span style="background: #66cc00;"></span> Záhrady a záhradkárske osady</p>
-    		<p><span style="background: #006666;"></span> Ovocné sady</p>
-    		<p><span style="background: #ccffcc;"></span> Vinice</p>
-    		<p><span style="background: #ff9966;"></span> Poľnohospodárske mozaiky s drevinami</p>
-   		<p><span style="background: #666666;"></span> Skaly a sutiny</p>
-    		<p><span style="background: #0066ff;"></span> Vodné toky</p>
-    		<p><span style="background: #3399ff;"></span> Vodné plochy</p>
-    		<p><span style="background: #ff2626;"></span> IBV so záhradami</p>
-    		<p><span style="background: #ff3366;"></span> Hromadná výstavba s okolitými plochami</p>
-    		<p><span style="background: #ff9999;"></span> Centrum, vybavenosť a služby</p>
-    		<p><span style="background: #006600;"></span> Parková výsadba</p>
-    		<p><span style="background: #52ff26;"></span> Cintoríny</p>
-    		<p><span style="background: #006666;"></span> Ostatná mestská zeleň</p>
-    		<p><span style="background: #009999;"></span> Technická, vegetácia</p>
-    		<p><span style="background: #cccc00;"></span> Športové a rekreačné objekty a areály</p>
-    		<p><span style="background: #7d26ff;"></span> Priemyselné a poľnohospodárske objekty</p>
-    		<p><span style="background: #667e66;"></span> Skládky a ruderálne plochy</p>
-    		<p><span style="background: #b4b4b4;"></span> Staveniská</p>
-    		<p><span style="background: #443f25;"></span> Železničné trate a areály</p>
-    		<p><span style="background: #6e9464;"></span> Trávnaté letisko</p>
-    		<p><span style="background: #c9c9c9;"></span> Cesty rôzneho typu</p>
-    		<p><span style="background: #968770;"></span> Účelové cesty</p>
-	</div>  
+
         <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
         <script>
-            // Inicializácia mapy
             var map = L.map('map', {
                 zoomControl: true,
                 maxZoom: 18,
                 minZoom: 10
             }).setView([48.3129, 18.0873], 13);
 
-            // Podkladová vrstva: MapTiler
-            var mapTilerLayer = L.tileLayer('https://api.maptiler.com/maps/backdrop/{z}/{x}/{y}.png?key=pusNgxj730b7uvx56NUd', {
-                maxZoom: 19,
-                attribution: '© MapTiler contributors'
-            }).addTo(map);
+            // Base layers
+            var mapTilerLayer = L.tileLayer('https://api.maptiler.com/maps/backdrop/{z}/{x}/{y}.png?key=pusNgxj730b7uvx56NUd', { maxZoom: 19 });
+            var osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 });
+            var blankLayer = L.tileLayer('');
 
-            // Podkladová vrstva: OpenStreetMap
-            var osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
-                attribution: '© OpenStreetMap contributors'
-            });
+            // Thematic layers
+            var imgReclass = 'data/2023_reclass_0.png';
+            var boundsReclass = [[48.203797543670156, 17.98060332596714], [48.39435883836944, 18.189952314693]];
+            var reclassLayer = L.imageOverlay(imgReclass, boundsReclass, { opacity: 0.7 });
 
-            // Podkladová vrstva: Blank (biela)
-            var blankLayer = L.tileLayer('', {
-                attribution: '© Blank layer'
-            });
-
-            // Tematická vrstva 1: Runoff Ratio
-            var imgRunoffRatio = 'data/runoff_ratio_1.png';
-            var boundsRunoffRatio = [[48.203797543670156, 17.98060332596714], [48.39435883836944, 18.189952314693]];
-            var runoffLayer = L.imageOverlay(imgRunoffRatio, boundsRunoffRatio, { opacity: 0.7 });
-
-            // Tematická vrstva 2: Retention Volume
-            var imgRetentionVolume = 'data/retention_volume_no_inf_2.png';
-            var boundsRetentionVolume = [[48.203797543670156, 17.98060332596714], [48.39435883836944, 18.189952314693]];
-            var retentionLayer = L.imageOverlay(imgRetentionVolume, boundsRetentionVolume, { opacity: 0.7 });
-
-            // Tematická vrstva 3: Urban Cooling
-            var imgUrbanCooling = 'data/hm_0.png';
-            var boundsUrbanCooling = [[48.203797543670156, 17.98060332596714], [48.39435883836944, 18.189952314693]];
-            var urbanCoolingLayer = L.imageOverlay(imgUrbanCooling, boundsUrbanCooling, { opacity: 0.7 });
-			
-	     // Tematická vrstva 4: Urban Cooling Update
-	     var imgUrbanCoolingUpdate = 'data/hm_1_0.png'; // Cesta k obrázku
-	     var boundsUrbanCoolingUpdate = [[48.203797543670156, 17.98060332596714], [48.39435883836944, 18.189952314693]];
-             var urbanCoolingUpdateLayer = L.imageOverlay(imgUrbanCoolingUpdate, boundsUrbanCoolingUpdate, { opacity: 0.7 });
-
-             // Define the new thematic layer
-    	     var imgReclass = 'data/2023_reclass_0.png'; // Adjust the image path
-             var boundsReclass = [[48.203797543670156, 17.98060332596714], [48.39435883836944, 18.189952314693]];
-             var reclassLayer = L.imageOverlay(imgReclass, boundsReclass, { opacity: 0.7 });
-	    
-            // Definovanie základných a tematických vrstiev
-            var baseLayers = {
-                "MapTiler": mapTilerLayer,
-                "OpenStreetMap": osmLayer,
-                "Blank": blankLayer
-            };
-
+            // Overlay layers
             var overlayLayers = {
-                "Runoff Ratio": runoffLayer,
-                "Retention Volume": retentionLayer,
-                "Urban Cooling": urbanCoolingLayer,
-				"Urban Cooling Update": urbanCoolingUpdateLayer
+                "2023 Reclass": reclassLayer
             };
 
-            // Ovládací prvok pre vrstvy
-            L.control.layers(baseLayers, overlayLayers, { collapsed: false }).addTo(map);
+            // Layer control
+            L.control.layers({ "MapTiler": mapTilerLayer, "OpenStreetMap": osmLayer, "Blank": blankLayer }, overlayLayers).addTo(map);
 
-            // Dynamická správa legiend
-		map.on('overlayadd', function (event) {
-       		 if (event.layer === runoffLayer) {
-           		 document.getElementById('runoff-legend').style.display = 'block';
-        	} else if (event.layer === retentionLayer) {
-          		  document.getElementById('retention-legend').style.display = 'block';
-        	} else if (event.layer === urbanCoolingLayer || event.layer === urbanCoolingUpdateLayer) {
-         		   document.getElementById('cooling-legend').style.display = 'block';
-        	} else if (event.layer === reclassLayer) {
-           		 document.getElementById('reclass-legend').style.display = 'block';
-       		}
-    	});
+            // Legend handling
+            map.on('overlayadd', function (event) {
+                const legendMap = {
+                    [reclassLayer]: 'reclass-legend'
+                };
+                if (legendMap[event.layer]) {
+                    document.getElementById(legendMap[event.layer]).style.display = 'block';
+                }
+            });
 
-   		map.on('overlayremove', function (event) {
-        	if (event.layer === runoffLayer) {
-            		document.getElementById('runoff-legend').style.display = 'none';
-        	} else if (event.layer === retentionLayer) {
-           		document.getElementById('retention-legend').style.display = 'none';
-        	} else if (event.layer === urbanCoolingLayer || event.layer === urbanCoolingUpdateLayer) {
-          		  document.getElementById('cooling-legend').style.display = 'none';
-        	} else if (event.layer === reclassLayer) {
-          	  document.getElementById('reclass-legend').style.display = 'none';
-        	}
+            map.on('overlayremove', function (event) {
+                const legendMap = {
+                    [reclassLayer]: 'reclass-legend'
+                };
+                if (legendMap[event.layer]) {
+                    document.getElementById(legendMap[event.layer]).style.display = 'none';
+                }
+            });
+        </script>
     </body>
 </html>
