@@ -74,38 +74,6 @@
             <p><span style="background: #62a9b2;"></span> 0,8</p>
 			<p><span style="background: #2b83ba;"></span> 0,9</p>
         </div>
-	<div id="reclass-legend" class="legend">
-    		<h4>2023 Reclass - Land Use Types</h4>
-    		<p><span style="background: #339900;"></span> Lesy a lesíky</p>
-    		<p><span style="background: #00ffcc;"></span> Prieseky, polomy, lesné cesty</p>
-    		<p><span style="background: #33ff33;"></span> Mimolesná vegetácia</p>
-    		<p><span style="background: #ffff99;"></span> TTP</p>
-    		<p><span style="background: #ffff00;"></span> Dočasné úhory</p>
-    		<p><span style="background: #cc6600;"></span> Veľkoplošné polia</p>
-    		<p><span style="background: #cc9900;"></span> Maloplošné polia a mozaiky</p>
-    		<p><span style="background: #66cc00;"></span> Záhrady a záhradkárske osady</p>
-    		<p><span style="background: #006666;"></span> Ovocné sady</p>
-    		<p><span style="background: #ccffcc;"></span> Vinice</p>
-    		<p><span style="background: #ff9966;"></span> Poľnohospodárske mozaiky s drevinami</p>
-   		<p><span style="background: #666666;"></span> Skaly a sutiny</p>
-    		<p><span style="background: #0066ff;"></span> Vodné toky</p>
-    		<p><span style="background: #3399ff;"></span> Vodné plochy</p>
-    		<p><span style="background: #ff2626;"></span> IBV so záhradami</p>
-    		<p><span style="background: #ff3366;"></span> Hromadná výstavba s okolitými plochami</p>
-    		<p><span style="background: #ff9999;"></span> Centrum, vybavenosť a služby</p>
-    		<p><span style="background: #006600;"></span> Parková výsadba</p>
-    		<p><span style="background: #52ff26;"></span> Cintoríny</p>
-    		<p><span style="background: #006666;"></span> Ostatná mestská zeleň</p>
-    		<p><span style="background: #009999;"></span> Technická, vegetácia</p>
-    		<p><span style="background: #cccc00;"></span> Športové a rekreačné objekty a areály</p>
-    		<p><span style="background: #7d26ff;"></span> Priemyselné a poľnohospodárske objekty</p>
-    		<p><span style="background: #667e66;"></span> Skládky a ruderálne plochy</p>
-    		<p><span style="background: #b4b4b4;"></span> Staveniská</p>
-    		<p><span style="background: #443f25;"></span> Železničné trate a areály</p>
-    		<p><span style="background: #6e9464;"></span> Trávnaté letisko</p>
-    		<p><span style="background: #c9c9c9;"></span> Cesty rôzneho typu</p>
-    		<p><span style="background: #968770;"></span> Účelové cesty</p>
-	</div>  
         <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
         <script>
             // Inicializácia mapy
@@ -152,11 +120,6 @@
 	     var boundsUrbanCoolingUpdate = [[48.203797543670156, 17.98060332596714], [48.39435883836944, 18.189952314693]];
              var urbanCoolingUpdateLayer = L.imageOverlay(imgUrbanCoolingUpdate, boundsUrbanCoolingUpdate, { opacity: 0.7 });
 
-             // Define the new thematic layer
-    	     var imgReclass = 'data/2023_reclass_0.png'; // Adjust the image path
-             var boundsReclass = [[48.203797543670156, 17.98060332596714], [48.39435883836944, 18.189952314693]];
-             var reclassLayer = L.imageOverlay(imgReclass, boundsReclass, { opacity: 0.7 });
-	    
             // Definovanie základných a tematických vrstiev
             var baseLayers = {
                 "MapTiler": mapTilerLayer,
@@ -175,27 +138,25 @@
             L.control.layers(baseLayers, overlayLayers, { collapsed: false }).addTo(map);
 
             // Dynamická správa legiend
-		map.on('overlayadd', function (event) {
-       		 if (event.layer === runoffLayer) {
-           		 document.getElementById('runoff-legend').style.display = 'block';
-        	} else if (event.layer === retentionLayer) {
-          		  document.getElementById('retention-legend').style.display = 'block';
-        	} else if (event.layer === urbanCoolingLayer || event.layer === urbanCoolingUpdateLayer) {
-         		   document.getElementById('cooling-legend').style.display = 'block';
-        	} else if (event.layer === reclassLayer) {
-           		 document.getElementById('reclass-legend').style.display = 'block';
-       		}
-    	});
+			map.on('overlayadd', function (event) {
+				if (event.layer === runoffLayer) {
+					document.getElementById('runoff-legend').style.display = 'block';
+				} else if (event.layer === retentionLayer) {
+					document.getElementById('retention-legend').style.display = 'block';
+				} else if (event.layer === urbanCoolingLayer || event.layer === urbanCoolingUpdateLayer) {
+					document.getElementById('cooling-legend').style.display = 'block'; // Rovnaká legenda pre obe vrstvy
+				}
+			});
 
-   		map.on('overlayremove', function (event) {
-        	if (event.layer === runoffLayer) {
-            		document.getElementById('runoff-legend').style.display = 'none';
-        	} else if (event.layer === retentionLayer) {
-           		document.getElementById('retention-legend').style.display = 'none';
-        	} else if (event.layer === urbanCoolingLayer || event.layer === urbanCoolingUpdateLayer) {
-          		  document.getElementById('cooling-legend').style.display = 'none';
-        	} else if (event.layer === reclassLayer) {
-          	  document.getElementById('reclass-legend').style.display = 'none';
-        	}
+			map.on('overlayremove', function (event) {
+				if (event.layer === runoffLayer) {
+					document.getElementById('runoff-legend').style.display = 'none';
+				} else if (event.layer === retentionLayer) {
+					document.getElementById('retention-legend').style.display = 'none';
+				} else if (event.layer === urbanCoolingLayer || event.layer === urbanCoolingUpdateLayer) {
+					document.getElementById('cooling-legend').style.display = 'none';
+				}
+			});
+        </script>
     </body>
 </html>
