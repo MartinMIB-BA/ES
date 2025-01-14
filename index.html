@@ -114,6 +114,11 @@
             var imgUrbanCooling = 'data/hm_0.png';
             var boundsUrbanCooling = [[48.203797543670156, 17.98060332596714], [48.39435883836944, 18.189952314693]];
             var urbanCoolingLayer = L.imageOverlay(imgUrbanCooling, boundsUrbanCooling, { opacity: 0.7 });
+			
+			// Tematická vrstva 4: Urban Cooling Update
+			var imgUrbanCoolingUpdate = 'data/hm_1.png'; // Cesta k obrázku
+			var boundsUrbanCoolingUpdate = [[48.203797543670156, 17.98060332596714], [48.39435883836944, 18.189952314693]];
+			var urbanCoolingUpdateLayer = L.imageOverlay(imgUrbanCoolingUpdate, boundsUrbanCoolingUpdate, { opacity: 0.7 });
 
             // Definovanie základných a tematických vrstiev
             var baseLayers = {
@@ -125,32 +130,33 @@
             var overlayLayers = {
                 "Runoff Ratio": runoffLayer,
                 "Retention Volume": retentionLayer,
-                "Urban Cooling": urbanCoolingLayer
+                "Urban Cooling": urbanCoolingLayer,
+				"Urban Cooling Update": urbanCoolingUpdateLayer
             };
 
             // Ovládací prvok pre vrstvy
             L.control.layers(baseLayers, overlayLayers, { collapsed: false }).addTo(map);
 
             // Dynamická správa legiend
-            map.on('overlayadd', function (event) {
-                if (event.layer === runoffLayer) {
-                    document.getElementById('runoff-legend').style.display = 'block';
-                } else if (event.layer === retentionLayer) {
-                    document.getElementById('retention-legend').style.display = 'block';
-                } else if (event.layer === urbanCoolingLayer) {
-                    document.getElementById('cooling-legend').style.display = 'block';
-                }
-            });
+			map.on('overlayadd', function (event) {
+				if (event.layer === runoffLayer) {
+					document.getElementById('runoff-legend').style.display = 'block';
+				} else if (event.layer === retentionLayer) {
+					document.getElementById('retention-legend').style.display = 'block';
+				} else if (event.layer === urbanCoolingLayer || event.layer === urbanCoolingUpdateLayer) {
+					document.getElementById('cooling-legend').style.display = 'block'; // Rovnaká legenda pre obe vrstvy
+				}
+			});
 
-            map.on('overlayremove', function (event) {
-                if (event.layer === runoffLayer) {
-                    document.getElementById('runoff-legend').style.display = 'none';
-                } else if (event.layer === retentionLayer) {
-                    document.getElementById('retention-legend').style.display = 'none';
-                } else if (event.layer === urbanCoolingLayer) {
-                    document.getElementById('cooling-legend').style.display = 'none';
-                }
-            });
+			map.on('overlayremove', function (event) {
+				if (event.layer === runoffLayer) {
+					document.getElementById('runoff-legend').style.display = 'none';
+				} else if (event.layer === retentionLayer) {
+					document.getElementById('retention-legend').style.display = 'none';
+				} else if (event.layer === urbanCoolingLayer || event.layer === urbanCoolingUpdateLayer) {
+					document.getElementById('cooling-legend').style.display = 'none';
+				}
+			});
         </script>
     </body>
 </html>
